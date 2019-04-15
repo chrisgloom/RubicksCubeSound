@@ -16,9 +16,9 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext
 var rawPitchArray = []
 
 // instantiate a random cube
-let cube = Cube.random()
+let cube = RubiksCube.random()
 
-//
+// initialize our boolean
 var inNote = false
 
 /*
@@ -81,16 +81,17 @@ getUserMedia({
   video: false,
   audio: true
 })
-  .then(function (stream) {
-    var micStream = new MicrophoneStream(stream, {
-      objectMode: true
-    })
+  .then(
+    function (stream) {
+
+    var micStream = new MicrophoneStream(stream, {objectMode: true})
+
     micStream.on('data', function (chunk) {
       const audioBufferMaybe = chunk
       const float32Array = audioBufferMaybe.getChannelData(0) // get a single channel of sound
       const pitch = detectPitch(float32Array) // null if pitch cannot be identified
 
-      console.log(pitch)
+      // console.log(pitch)
       if (pitch == null) {
         nullsSinceLastPitch += 1
       }

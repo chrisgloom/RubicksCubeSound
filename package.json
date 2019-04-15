@@ -1,0 +1,17 @@
+{
+  "name": "audiocube",
+  "version": "0.0.1",
+  "description": "Rubik's cube solved entirely by pitch",
+  "main": "bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher Crawford",
+  "license": "ISC",
+  "dependencies": {
+    "get-user-media-promise": "^1.1.1",
+    "microphone-stream": "^3.0.7",
+    "pitchfinder": "^2.0.4",
+    "tonal-freq": "^0.69.6"
+  }
+}
