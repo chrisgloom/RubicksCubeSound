@@ -9,9 +9,13 @@
   "author": "Christopher Crawford",
   "license": "ISC",
   "dependencies": {
+    "cubejs": "^1.3.2",
     "get-user-media-promise": "^1.1.1",
     "microphone-stream": "^3.0.7",
     "pitchfinder": "^2.0.4",
     "tonal-freq": "^0.69.6"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
   }
 }
