@@ -3,7 +3,7 @@ const Pitchfinder = require('pitchfinder')
 const detectPitch = Pitchfinder.AMDF()
 const getUserMedia = require('get-user-media-promise')
 const MicrophoneStream = require('microphone-stream')
-const soundCube = require('./SoundCube.js')
+const noteState = require('./NoteState.js/index.js')
 
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext
@@ -29,6 +29,6 @@ getUserMedia({
       const pitch = detectPitch(float32Array) // null if pitch cannot be identified
 
       // console.log(pitch)
-      soundCube.getNote(pitch)
+      noteState.getNote(pitch)
     })
   })
