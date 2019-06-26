@@ -2,27 +2,6 @@
   const note = require ('tonal-freq').note
   const RubiksCube = require('cubejs')
   
-  function debounce(func, wait, immediate) {
-    var timeout;
-  
-    return function executedFunction() {
-      var context = this;
-      var args = arguments;
-          
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-  
-      var callNow = immediate && !timeout;
-      
-      clearTimeout(timeout);
-  
-      timeout = setTimeout(later, wait);
-      
-      if (callNow) func.apply(context, args);
-    };
-  }
     // Holds single pitch data to be averaged
     let rawPitchArray = []
 
@@ -32,6 +11,31 @@
     // instantiate a random cube
     let cube = RubiksCube.random()
 
+
+    function debounce(func, wait, immediate) {
+      var timeout;
+    
+      return function executedFunction() {
+        var context = this;
+        var args = arguments;
+            
+        var later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+    
+        var callNow = immediate && !timeout;
+        
+        clearTimeout(timeout);
+    
+        timeout = setTimeout(later, wait);
+        
+        if (callNow){
+          return func.apply(context, args);
+        } 
+        
+      };
+    }
     /*
     nullsSinceLastPitch is an attempt to facilitate junk pitch dumping when the
     pitches detected aren't actually long enough to have been a valid note and
@@ -48,7 +52,7 @@
     if (arrayLength<=4){
       // dumps too short sections of pitch data
       rawPitchArray = []
-      console.log("array length too short")
+      // console.log("array length too short")
       return null
     }
     while (rawPitchArray.length) {
@@ -58,10 +62,12 @@
     // Then process the averaged pitch and find its note value
     var averagePitch = runningSum / arrayLength
     
+    // console.log(note(averagePitch))
+    // TODO: insert a callback here
+
     return note(averagePitch)
 }
-  
-  let debouncedNoteReturn = debounce(noteReturn, 500, true)
+  let debouncedNoteReturn = debounce(noteReturn,500, true)
   
   function pitchStateManagement(pitch){
     if (pitch == null) {
@@ -75,7 +81,7 @@
         inNote = false
         // Debounced return function
         let returnedNote = debouncedNoteReturn()
-        console.log(returnedNote)
+        // console.log(returnedNote)
         return returnedNote
         
     } else if (!(pitch == null) && !inNote) {

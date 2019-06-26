@@ -1,6 +1,7 @@
 var StateMachine = require('javascript-state-machine')
-// var cube = require("cubejs")
-import cube from 'coffee-loader!./cube.coffee';
+var cube = require("./cube.js")
+cube = new cube()
+// import cube from 'coffee-loader!./cube.coffee';
 
 
 var fsm = new StateMachine({
@@ -17,6 +18,14 @@ var fsm = new StateMachine({
 // cube perspective possibly also a state? no just an enum. a set val.
 // all of this needs to set up and change only on note events
 
-function updateNote(note){
+function consumeNote(note){
+    if(note){
+        console.log(note)
+        console.log(cube.rotCube.frontFace)
+    }
+    
+}
 
+module.exports = {
+    consumeNote
 }

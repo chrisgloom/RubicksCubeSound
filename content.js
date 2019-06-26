@@ -3,7 +3,8 @@ const Pitchfinder = require('pitchfinder')
 const detectPitch = Pitchfinder.AMDF()
 const getUserMedia = require('get-user-media-promise')
 const MicrophoneStream = require('microphone-stream')
-const noteState = require('./NoteState.js/index.js')
+const noteState = require('./NoteState.js')
+const cubeState = require("./CubeState.js")
 
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext
@@ -28,7 +29,6 @@ getUserMedia({
       const float32Array = audioBuffer.getChannelData(0) // get a single channel of sound
       const pitch = detectPitch(float32Array) // null if pitch cannot be identified
 
-      // console.log(pitch)
-      noteState.getNote(pitch)
+      cubeState.consumeNote(noteState.getNote(pitch))
     })
   })
