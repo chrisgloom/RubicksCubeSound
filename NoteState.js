@@ -1,16 +1,12 @@
 /* eslint-disable no-console */
   const note = require ('tonal-freq').note
-  const RubiksCube = require('cubejs')
+  
   
     // Holds single pitch data to be averaged
     let rawPitchArray = []
 
     // initialize our boolean
     let inNote = false
-
-    // instantiate a random cube
-    let cube = RubiksCube.random()
-
 
     function debounce(func, wait, immediate) {
       var timeout;
