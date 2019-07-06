@@ -2,9 +2,38 @@
 Work in progress web app that will allow you to manipulate a rubick's cube purely by musical pitch
 
 
+#Notes
+These are just notes to myself at the moment when I make design decisions and decide to use certain libraries
+
 
 `$ webpack ./entry.js bundle.js`
 https://webpack.github.io/docs/tutorials/getting-started/
+
+
+### tonal useful ideas
+```
+> tonal.Scale.notes("C6 major pentatonic")
+[ 'C6', 'D6', 'E6', 'G6', 'A6' ]
+> tonal.Scale.notes("C6 major pentatonic")[0]
+'C6'
+>tonal.Scale.notes("C6 major pentatonic").includes("C6")
+true
+> tonal.Scale.notes("C6 major pentatonic").includes("C7")
+false
+> tonal.Scale.notes("C6 major pentatonic").includes("C#6")
+false
+> tonal.Scale.notes("C6 major pentatonic").includes("D6")
+true
+
+> tonal.Scale.notes("C6 major").concat(tonal.Scale.notes("C7 major"))
+[
+  'C6', 'D6', 'E6',
+  'F6', 'G6', 'A6',
+  'B6', 'C7', 'D7',
+  'E7', 'F7', 'G7',
+  'A7', 'B7'
+]
+```
 
 
 
