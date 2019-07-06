@@ -15,20 +15,29 @@ if (!navigator.getUserMedia) {
   console.error('Your browser does not support getUserMedia')
 }
 
+
+var returnedNote;
+
 getUserMedia({
-  video: false,
-  audio: true
-})
+    video: false,
+    audio: true
+  })
   .then(
     function (stream) {
 
-    var micStream = new MicrophoneStream(stream, {objectMode: true})
+      var micStream = new MicrophoneStream(stream, {
+        objectMode: true
+      })
 
-    micStream.on('data', function (chunk) {
-      const audioBuffer = chunk
-      const float32Array = audioBuffer.getChannelData(0) // get a single channel of sound
-      const pitch = detectPitch(float32Array) // null if pitch cannot be identified
+      micStream.on('data', function (chunk) {
+        const audioBuffer = chunk
+        const float32Array = audioBuffer.getChannelData(0) // get a single channel of sound
+        const pitch = detectPitch(float32Array) // null if pitch cannot be identified
+        returnedNote = noteState.getNote(pitch)
 
-      cubeState.consumeNote(noteState.getNote(pitch))
+        if (returnedNote) { // ie if the note isn't null or undefined
+          cubeState.consumeNote(returnedNote)
+        }
+
+      })
     })
-  })
