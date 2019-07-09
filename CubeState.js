@@ -2,18 +2,19 @@
 var StateMachine = require('javascript-state-machine')
 var cube = require("./cube.js")
 var tonal = require("tonal")
+const extractNumbers = require("extract-numbers")
 cube = cube.random()
 // import cube from 'coffee-loader!./cube.coffee';
 
 // So I don't have to keep staring at 0's and trying to remember which side that is
-const faceNames = {
-    0: 'U',
-    1: 'R',
-    2: 'F',
-    3: 'D',
-    4: 'L',
-    5: 'B'
-};
+// const faceNames = {
+//     0: 'U',
+//     1: 'R',
+//     2: 'F',
+//     3: 'D',
+//     4: 'L',
+//     5: 'B'
+// };
 
 
 // polymorphic function called by the microphone and set to be different functions depending on state
@@ -84,15 +85,38 @@ function turnCubeConsumer(note) {
     console.log(cube.asString())
 }
 
-function changePerspectiveConsumer(note) {
-
+function concatenatedTwoOctaves(inputNote) {
+    var octaveRaisedByOneAsString = (parseInt(extractNumbers(inputNote)) + 1).toString()
+    var nStringWithoutNumber = inputNote.split("").filter(s => !Number.isInteger(parseInt(s))).join("")
+    var scaleOne = tonal.Scale.notes(inputNote, "major")
+    var scaleTwo = tonal.Scale.notes(nStringWithoutNumber + octaveRaisedByOneAsString, "major")
+    return scaleOne.concat(scaleTwo)
 }
+
+function processInitialNote(note) {
+    //takes an initial note--the cube will be two octaves of a major pentatonic scale above this
+    noteString = note
+    currentScaleArray = arrayValueSwap(concatenatedTwoOctaves(noteString))
+    // TODO: pause and play this scale. ux ideas, make this only state change if that same note is played again
+    console.log("currentScale is now: " + currentScaleArray)
+    console.log(currentScaleArray)
+    fsm.setupDone()
+}
+
+// function changePerspectiveConsumer(note) {
+
+// }
 
 var consumeNote = turnCubeConsumer
 
 var fsm = new StateMachine({
-    init: 'turncube',
+    init: 'scaleSetup',
     transitions: [{
+            name: 'setupDone',
+            from: 'scaleSetup',
+            to: 'turncube'
+        },
+        {
             name: 'sixlow',
             from: 'turncube',
             to: 'changePerspective'
@@ -114,13 +138,15 @@ var fsm = new StateMachine({
         }
     ],
     methods: {
+        onScaleSetup: function () {
+            console.log("in scale setup")
+            consumeNote = processInitialNote
+        },
         onTurncube: function () {
             console.log("turn cube")
             // swap key value pairs from 1:'A' to 'A':1
             // ie A is the indexth note in this scale
-            currentScaleArray = arrayValueSwap(tonal.Scale.notes(noteString, "major"))
-            console.log("currentScale is now: " + currentScaleArray)
-            console.log(currentScaleArray)
+
             consumeNote = turnCubeConsumer
         },
         onChangePerspective: function () {

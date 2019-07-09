@@ -36,7 +36,7 @@ getUserMedia({
         returnedNote = noteState.getNote(pitch)
 
         if (returnedNote) { // ie if the note isn't null or undefined
-          cubeState.consumeNote(returnedNote)
+          cubeState.openForConsumption(returnedNote)
         }
 
       })
