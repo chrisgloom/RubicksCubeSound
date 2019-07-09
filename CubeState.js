@@ -27,18 +27,10 @@ function arrayValueSwap(array) {
 // starting in the front view, D
 let noteString = "D4"
 var currentScaleArray = tonal.Scale.notes(noteString, "major")
-console.log("in the main file " + currentScaleArray)
-console.log("in the main file " + tonal.Scale.notes("D4 major"))
+var shouldTakeNewNotes = true
 
-/* TODO:
-    figure out some way to handle not consuming notes during periods of playback. Maybe purposefully flushing the notestate object after playback to be sure
-    test statemachine with correct caps and stuff so that the transitions actually fire
-*/
 function turnCubeConsumer(note) {
     const octUp = 7
-    console.log(note)
-    console.log("current scale array of note is " + currentScaleArray[note])
-    console.log(currentScaleArray)
 
     switch (parseInt(currentScaleArray[note])) { // swapping key vals turns the ints into strings so turn them back
         case 0: // note 1 of scale, F
@@ -92,6 +84,10 @@ function turnCubeConsumer(note) {
     console.log(cube.asString())
 }
 
+function changePerspectiveConsumer(note) {
+
+}
+
 var consumeNote = turnCubeConsumer
 
 var fsm = new StateMachine({
@@ -99,7 +95,7 @@ var fsm = new StateMachine({
     transitions: [{
             name: 'sixlow',
             from: 'turncube',
-            to: 'changeperspective'
+            to: 'changePerspective'
         },
         {
             name: 'sixhigh',
@@ -113,25 +109,25 @@ var fsm = new StateMachine({
         },
         {
             name: 'returnsl',
-            from: 'changeperspective',
+            from: 'changePerspective',
             to: 'turncube'
         }
     ],
     methods: {
         onTurncube: function () {
             console.log("turn cube")
-            let tempArray = tonal.Scale.notes(noteString, "major")
             // swap key value pairs from 1:'A' to 'A':1
             // ie A is the indexth note in this scale
-            console.log("temp array is:" + tempArray)
-            console.log(tempArray)
-            currentScaleArray = arrayValueSwap(tempArray)
+            currentScaleArray = arrayValueSwap(tonal.Scale.notes(noteString, "major"))
             console.log("currentScale is now: " + currentScaleArray)
             console.log(currentScaleArray)
             consumeNote = turnCubeConsumer
         },
-        onSixlow: function () {
+        onChangePerspective: function () {
+            // change perspective
             console.log("In six low")
+
+
         },
         onSixhigh: function () {
             console.log("In six high")
@@ -143,10 +139,14 @@ var fsm = new StateMachine({
 
 
 
+function openForConsumption(note) {
+    if (shouldTakeNewNotes) {
+        consumeNote(note)
+    }
+}
+
 
 
 module.exports = {
-    consumeNote,
-    fsm,
-    currentScaleArray
+    openForConsumption
 }

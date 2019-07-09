@@ -1,4 +1,8 @@
 
+.eslintrc.json
+.vscode/
+
+
 # generated from webpack
 bundle.js
 
