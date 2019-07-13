@@ -5,6 +5,7 @@ const getUserMedia = require('get-user-media-promise')
 const MicrophoneStream = require('microphone-stream')
 const noteState = require('./NoteState.js')
 const cubeState = require("./CubeState.js")
+var tone = require("tone")
 
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext
@@ -17,6 +18,22 @@ if (!navigator.getUserMedia) {
 
 
 var returnedNote;
+
+document.addEventListener("click", function () {
+
+  var context = new tone.Context(AudioContext)
+  context.resume()
+  var synth = new tone.Synth().toMaster()
+  synth.triggerAttackRelease("C4", "8n")
+  console.log("triggered")
+
+});
+
+
+function mouseDownFunction() {
+
+}
+
 
 getUserMedia({
     video: false,
