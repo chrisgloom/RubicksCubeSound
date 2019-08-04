@@ -3,6 +3,7 @@ var StateMachine = require('javascript-state-machine')
 var cube = require("./cube.js")
 var tonal = require("tonal")
 const extractNumbers = require("extract-numbers")
+var readCubeEnumerated = require("./ReadCubeEnumerated.js")
 cube = cube.random()
 // import cube from 'coffee-loader!./cube.coffee';
 
@@ -15,6 +16,17 @@ const faceNames = {
     4: 'L',
     5: 'B'
 };
+
+const cornerColor = [
+    ['U', 'R', 'F'],
+    ['U', 'F', 'L'],
+    ['U', 'L', 'B'],
+    ['U', 'B', 'R'],
+    ['D', 'F', 'R'],
+    ['D', 'L', 'F'],
+    ['D', 'B', 'L'],
+    ['D', 'R', 'B'],
+];
 
 
 // polymorphic function called by the microphone and set to be different functions depending on state
@@ -144,6 +156,27 @@ function changePerspectiveConsumer(note) {
     }
 }
 
+function readface() {
+    shouldTakeNewNotes = false
+    // this determines which corner and edge pieces we're looking at
+    switch (faceNums[cube.rotCube.frontFace]) {
+        case U:
+            cornerColor[cube.cp[readCubeEnumerated.U.topLeftCorner]]
+            break;
+        case R:
+        case F:
+        case D:
+        case L:
+        case B:
+        default:
+            console.log("current face not recognized")
+            break;
+
+
+    }
+
+}
+
 var consumeNote = turnCubeConsumer
 
 var fsm = new StateMachine({
@@ -190,11 +223,8 @@ var fsm = new StateMachine({
             console.log("change perspective")
             consumeNote = changePerspectiveConsumer
         },
-        onSixhigh: function () {
-            console.log("In six high")
-        },
-        onReturnsl: function () {
-            // play the face that we're coming to
+        onReadface: function () {
+            console.log("In read face")
         }
     }
 })

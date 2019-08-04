@@ -23,9 +23,10 @@ document.addEventListener("click", function () {
 
   var context = new tone.Context(AudioContext)
   context.resume()
+  console.log("context resumed")
   var synth = new tone.Synth().toMaster()
   synth.triggerAttackRelease("C4", "8n")
-  console.log("triggered")
+
 
 });
 
